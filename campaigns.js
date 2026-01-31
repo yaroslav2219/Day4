@@ -32,29 +32,32 @@ data:function() {
             this.date = firstDayOfMonth.toISOString().substring(0, 10);
             this.date2 = lastDayOfMonth.toISOString().substring(0, 10);
         },
-        togglePublished(item, value) {
-        this.parent.formData = {
-            ...item,
-            published: value
-        };
-
-        this.action();
-    },
-      get:function() {
-    var self = this;
-    self.loader = 1;
+togglePublished(item, value) {
+    item.published = value;
 
     axios.post(
-        self.parent.url + "/site/getCampaigns?auth=" + self.parent.user.auth.data
-    ).then(function(response){
+        this.parent.url + "/site/actionCampaign?auth=" + this.parent.user.auth.data,
+        this.parent.toFormData(item)
+    ).catch(() => {
+        item.published = !value;
+    });
+}
+     get() {
+    this.loader = 1;
 
-        self.data.items = Array.isArray(response.data.items)
-            ? response.data.items
+    axios.post(
+        this.parent.url + "/site/getCampaigns?auth=" + this.parent.user.auth.data
+    ).then(res => {
+
+        const items = Array.isArray(res.data.items)
+            ? res.data.items.filter(i => i && i.id)
             : [];
 
-        self.loader = 0;
-    }).catch(function(){
-        self.parent.logout();
+        this.data.items = items;
+
+        this.loader = 0;
+    }).catch(() => {
+        this.parent.logout();
     });
 },
         action:function(){
@@ -182,6 +185,7 @@ data:function() {
   No items
 </div>
 `};  
+
 
 
 
