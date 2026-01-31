@@ -42,6 +42,10 @@ togglePublished: function(item, value) {
             item.published = !value;
         });
     },
+         newCampaign() {
+    this.parent.formData = { title: "", published: false };
+    this.$refs.new.active = 1;
+  }
      get: function() {
         this.loader = 1;
 
@@ -60,41 +64,47 @@ togglePublished: function(item, value) {
             this.parent.logout();
         });
     },
-        action: function() {
-        var self = this;
-        self.parent.formData.copy = "";
-        var data = self.parent.toFormData(self.parent.formData);
+     action: function() {
+    if(!this.parent.formData.title) {
+        this.$refs.header.$refs.msg.alertFun("Title is required!");
+        return;
+    }
 
-        axios.post(this.parent.url + "/site/actionCampaign?auth=" + this.parent.user.auth.data).then(function(response){
-            self.$refs.new.active = 0;
-            if(self.parent.formData.id){
-                self.$refs.header.$refs.msg.successFun("Successfully updated campaign!");
-            }else{
-                self.$refs.header.$refs.msg.successFun("Successfully added new campaign!");
+    const self = this;
+    const data = self.parent.toFormData(self.parent.formData);
+
+    axios.post(this.parent.url+"/site/actionCampaign?auth="+this.parent.user.auth.data, data)
+      .then(function(response){
+        self.$refs.new.active = 0;
+        if(self.parent.formData.id){
+            self.$refs.header.$refs.msg.successFun("Successfully updated campaign!");
+        }else{
+            self.$refs.header.$refs.msg.successFun("Successfully added new campaign!");
+        }
+        self.get();
+      }).catch(function(error){
+        console.log('errors : ', error);
+      });
+},
+   del: async function () {
+    if(!this.parent.formData.id) return; // якщо немає id, нічого не видаляємо
+
+    if(await this.$refs.header.$refs.msg.confirmFun("Please confirm next action", "Do you want to delete this campaign?")){
+        const self = this;
+        const data = self.parent.toFormData(self.parent.formData);
+
+        axios.post(this.parent.url+"/site/actionCampaign?auth="+this.parent.user.auth.data, data)
+        .then(function(response){
+            if(response.data.error){
+                self.$refs.header.$refs.msg.alertFun(response.data.error);   
+            } else {
+                self.$refs.header.$refs.msg.successFun("Successfully deleted campaign!");
+                self.get();
             }
-
-            self.get();
         }).catch(function(error){
             console.log('errors : ', error);
         });
-    },
-       del: async function() {
-        if(await this.$refs.header.$refs.msg.confirmFun("Please confirm next action", "Do you want to delete this campaign?")){
-            var self = this;
-            var data = self.parent.toFormData(self.parent.formData);
-
-            axios.post(this.parent.url + "/site/actionCampaign?auth=" + this.parent.user.auth.data).then(function(response){
-                if(response.data.error){
-                    self.$refs.header.$refs.msg.alertFun(response.data.error);   
-                }else{
-                    self.$refs.header.$refs.msg.successFun("Successfully deleted campaign!");
-                    self.get();
-                }
-            }).catch(function(error){
-                console.log('errors : ', error);
-            });
-        }
-    },
+    }
 },
     template: `
     <div class="inside-content">
@@ -185,6 +195,7 @@ togglePublished: function(item, value) {
   No items
 </div>
 `};  
+
 
 
 
