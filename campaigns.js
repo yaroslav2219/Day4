@@ -42,7 +42,7 @@ togglePublished(item, value) {
         item.published = !value;
     });
 }
-     get() {
+     get:function() {
     this.loader = 1;
 
     axios.post(
@@ -185,6 +185,7 @@ togglePublished(item, value) {
   No items
 </div>
 `};  
+
 
 
 
