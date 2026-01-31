@@ -92,7 +92,7 @@ data:function() {
     </div>
     <div class="w60 ptb20 ac"><input type="date" @change="get()" /> - <input type="date" v-model="date2" @change="get()" />
     <div class="w20 al ptb20">
-      <a class="btnS" href="#" @click.prevent="parent.formData{};$refs.new.active=1"><i class="fas fa-plus"></i> New</a>
+      <a class="btnS" href="#" @click.prevent="parent.formData();$refs.new.active=1"><i class="fas fa-plus"></i> New</a>
     </div>
     </div>
     <popup ref="new" :title="(parent.formData && parent.formData.id) ? 'Edit campaign' : 'New Campaign'">
@@ -175,6 +175,7 @@ data:function() {
     </div>
     </div>
 `};  
+
 
 
 
