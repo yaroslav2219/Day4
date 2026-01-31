@@ -23,39 +23,82 @@ export const header = {
     },
     template: `
     <header class="header">
-    <div class="wrapper">
-    <div class="flex">
-    <div class="w20 logo">
-    <img :src="parent.url+'./logo.svg'" />
-    </div>
-    <div class="w70">
-    <div id="menu">
-    <i class="fas fa-bars" @click="menu=1"></i>
-    <ul :class="{active:menu==1}" v-if="parent.user && parent.user.type && parent.user.type=='admin'">
-    <li v-if="menu==1" class="al"><i class="fas fa-times" @click="menu=0"></i></li>
-    <li><router-link :class="{'router-link-active':$route.path.search('campaign')==1}" to="/campaigns">
-    <li><router-link :class="{'router-link-active':$route.path.search('users')==1}" to="/users">
-    </ul>
+      <div class="wrapper">
+        <div class="flex">
 
-    <ul :class="{active:menu==1}" v-if="parent.user && parent.user.type && parent.user.type!='admin'">
-    <li v-if="menu==1" class="al"><i class="fas fa-times" @click="menu=0"></i></li>
-    <li><router-link to="/statistics"><i class="fas fa-chart-area"></i>Statistics</router-link></li>
-    <li><router-link to="/ads"><i class="fas fa-image"></i>Ads</router-link></li>
-    <li><router-link to="/sites"><i class="fas fa-chrome"></i>Sites</router-link></li>
-    <li><router-link to="./payments"><i class="fas fa-credit-card"></i>Payments</router-link></li>
-    </ul>
-    </div>
-    </div>
-    <div class="w10 al" id="user-top" v-if="parent.user && parent.user.user">
-    <div id="user-circle" @click="toogleActive()">{{parent.user.user[0]}}</div>
-   <i @click="toogleActive()" class="fas fas-caret-down"></i>
-    <div id="user-info" :class="{active:active==1}">
-    <a href="#" @click.prevent="parent.logout();"><i class="fas fa-sign-out-alt"></i> {{parent.user.user}} Log out</a>
-    </div>
-    </div>
-    </div>
-    <msg ref="msg" />
+          <!-- LOGO -->
+          <div class="w20 logo">
+            <img :src="parent?.url + 'logo.svg'" />
+          </div>
+
+          <!-- MENU -->
+          <div class="w70">
+            <div id="menu">
+              <i class="fas fa-bars" @click="menu = true"></i>
+
+              <!-- ADMIN -->
+              <ul v-if="parent?.user?.type === 'admin'" :class="{ active: menu }">
+                <li class="al" v-if="menu">
+                  <i class="fas fa-times" @click="closeMenu"></i>
+                </li>
+
+                <li>
+                  <router-link
+                    to="/campaigns"
+                    :class="{ 'router-link-active': $route.path.includes('campaign') }"
+                    @click="closeMenu"
+                  >
+                    Campaigns
+                  </router-link>
+                </li>
+
+                <li>
+                  <router-link
+                    to="/users"
+                    :class="{ 'router-link-active': $route.path.includes('users') }"
+                    @click="closeMenu"
+                  >
+                    Users
+                  </router-link>
+                </li>
+              </ul>
+
+              <!-- USER -->
+              <ul v-else-if="parent?.user" :class="{ active: menu }">
+                <li class="al" v-if="menu">
+                  <i class="fas fa-times" @click="closeMenu"></i>
+                </li>
+
+                <li><router-link to="/statistics">Statistics</router-link></li>
+                <li><router-link to="/ads">Ads</router-link></li>
+                <li><router-link to="/sites">Sites</router-link></li>
+                <li><router-link to="/payments">Payments</router-link></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- USER MENU -->
+          <div class="w10 al" id="user-top" v-if="parent?.user?.user">
+            <div id="user-circle" @click="toggleUser">
+              {{ parent.user.user[0] }}
+            </div>
+
+            <i class="fas fa-caret-down" @click="toggleUser"></i>
+
+            <div id="user-info" :class="{ active: active }">
+              <a href="#" @click.prevent="parent.logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                {{ parent.user.user }} Log out
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <msg ref="msg" />
     </header>
     `
 
     };
+
