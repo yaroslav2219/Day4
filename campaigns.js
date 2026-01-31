@@ -32,6 +32,14 @@ data:function() {
             this.date = firstDayOfMonth.toISOString().substring(0, 10);
             this.date2 = lastDayOfMonth.toISOString().substring(0, 10);
         },
+        togglePublished(item, value) {
+        this.parent.formData = {
+            ...item,
+            published: value
+        };
+
+        this.action();
+    },
         get:function() {
             var self = this;
             var data = self.parent.toFormData(self.parent.formData);
@@ -133,8 +141,8 @@ data:function() {
     <td class="id">{{item.id}}</td>
     <td class="id">
     <toogle
-  v-model="item.published"
-  @update:modelValue="parent.formData = item; action()"
+  :modelValue="item.published"
+  @update:modelValue="togglePublished(item, $event)"
 />
     </td>
     <td><router-link :to="'/campaign/' + item.id">
@@ -179,6 +187,7 @@ data:function() {
     </div>
     </div>
 `};  
+
 
 
 
