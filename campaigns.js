@@ -1,3 +1,4 @@
+console.log('campaigns module loaded')
 export const campaigns = {
 data:function() {
     return {
@@ -174,6 +175,7 @@ data:function() {
     </div>
     </div>
 `};  
+
 
 
 
