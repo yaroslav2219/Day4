@@ -2,33 +2,25 @@ export const toogle = {
     props: {
         modelValue: {
             type: Boolean,
-            default: false
+            required: true
         }
     },
 
     emits: ['update:modelValue'],
 
-    data() {
-        return {
-            value: this.modelValue
-        }
-    },
-
-    watch: {
-        modelValue(newVal) {
-            this.value = newVal;
-        }
-    },
-
     methods: {
-        change() {
-            this.$emit('update:modelValue', this.value);
+        change(e) {
+            this.$emit('update:modelValue', e.target.checked);
         }
     },
 
     template: `
     <label class="switch">
-        <input type="checkbox" v-model="value" @change="change">
+        <input
+          type="checkbox"
+          :checked="modelValue"
+          @change="change"
+        >
         <span class="slider round"></span>
     </label>
     `
