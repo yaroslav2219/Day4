@@ -1,4 +1,4 @@
-const campaigns = {
+export const campaigns = {
 data:function() {
     return {
         parent: "",
@@ -174,6 +174,7 @@ data:function() {
     </div>
     </div>
 `};  
+
 
 
 
