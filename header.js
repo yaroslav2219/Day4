@@ -50,11 +50,12 @@ export const header = {
     <div id="user-circle" @click="toogleActive()">{{parent.user.user[0]}}</div>
    <i @click="toogleActive()" class="fas fas-caret-down"></i>
     <div id="user-info" :class="{active:active==1}">
-    <a href="#" @click.prevent="parent.logout();"><i class="fas fa-sign-out-alt></i> {{parent.user.user}} Log out</a>
+    <a href="#" @click.prevent="parent.logout();"><i class="fas fa-sign-out-alt"></i> {{parent.user.user}} Log out</a>
     </div>
     </div>
     </div>
     <msg ref="msg" />
     </header>
     `
+
     };
