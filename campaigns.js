@@ -23,79 +23,79 @@ data:function() {
         this.GetFirstAndLastDate();
     },
     methods:{
-        GetFirstAndLastDate:function() {
-            var year = new Date().getFullYear();
-            var month = new Date().getMonth();
-            var firstDayOfMonth = new Date(year, month, 2);
-            var lastDayOfMonth = new Date(year, month+1, 1);
+      GetFirstAndLastDate: function() {
+        var year = new Date().getFullYear();
+        var month = new Date().getMonth();
+        var firstDayOfMonth = new Date(year, month, 2);
+        var lastDayOfMonth = new Date(year, month + 1, 1);
 
-            this.date = firstDayOfMonth.toISOString().substring(0, 10);
-            this.date2 = lastDayOfMonth.toISOString().substring(0, 10);
-        },
-togglePublished(item, value) {
-    item.published = value;
+        this.date = firstDayOfMonth.toISOString().substring(0, 10);
+        this.date2 = lastDayOfMonth.toISOString().substring(0, 10);
+    },
+togglePublished: function(item, value) {
+        item.published = value;
 
-    axios.post(
-        this.parent.url + "/site/actionCampaign?auth=" + this.parent.user.auth.data,
-        this.parent.toFormData(item)
-    ).catch(() => {
-        item.published = !value;
-    });
-}
-     get:function() {
-    this.loader = 1;
+        axios.post(
+            this.parent.url + "/site/actionCampaign?auth=" + this.parent.user.auth.data,
+            this.parent.toFormData(item)
+        ).catch(() => {
+            item.published = !value;
+        });
+    },
+     get: function() {
+        this.loader = 1;
 
-    axios.post(
-        this.parent.url + "/site/getCampaigns?auth=" + this.parent.user.auth.data
-    ).then(res => {
+        axios.post(
+            this.parent.url + "/site/getCampaigns?auth=" + this.parent.user.auth.data
+        ).then(res => {
 
-        const items = Array.isArray(res.data.items)
-            ? res.data.items.filter(i => i && i.id)
-            : [];
+            const items = Array.isArray(res.data.items)
+                ? res.data.items.filter(i => i && i.id)
+                : [];
 
-        this.data.items = items;
+            this.data.items = items;
 
-        this.loader = 0;
-    }).catch(() => {
-        this.parent.logout();
-    });
-},
-        action:function(){
+            this.loader = 0;
+        }).catch(() => {
+            this.parent.logout();
+        });
+    },
+        action: function() {
+        var self = this;
+        self.parent.formData.copy = "";
+        var data = self.parent.toFormData(self.parent.formData);
+
+        axios.post(this.parent.url + "/site/actionCampaign?auth=" + this.parent.user.auth.data).then(function(response){
+            self.$refs.new.active = 0;
+            if(self.parent.formData.id){
+                self.$refs.header.$refs.msg.successFun("Successfully updated campaign!");
+            }else{
+                self.$refs.header.$refs.msg.successFun("Successfully added new campaign!");
+            }
+
+            self.get();
+        }).catch(function(error){
+            console.log('errors : ', error);
+        });
+    },
+       del: async function() {
+        if(await this.$refs.header.$refs.msg.confirmFun("Please confirm next action", "Do you want to delete this campaign?")){
             var self = this;
-            self.parent.formData.copy = "";
             var data = self.parent.toFormData(self.parent.formData);
 
-            axios.post(this.parent.url+"/site/actionCampaign?auth="+this.parent.user.auth.data).then(function(response){
-                self.$refs.new.active=0;
-                if(self.parent.formData.id){
-                    self.$refs.header.$refs.msg.successFun("Successfully updated campaign!");
+            axios.post(this.parent.url + "/site/actionCampaign?auth=" + this.parent.user.auth.data).then(function(response){
+                if(response.data.error){
+                    self.$refs.header.$refs.msg.alertFun(response.data.error);   
                 }else{
-                    self.$refs.header.$refs.msg.successFun("Successfully added new campaign!");
+                    self.$refs.header.$refs.msg.successFun("Successfully deleted campaign!");
+                    self.get();
                 }
-
-                self.get();
             }).catch(function(error){
                 console.log('errors : ', error);
             });
-        },
-        del:async function () {
-            if(await this.$refs.header.$refs.msg.confirmFun("Please confirm next action", "Do you want to delete this campaign?")){
-                var self = this;
-                var data = self.parent.toFormData(self.parent.formData);
-
-                axios.post(this.parent.url+"/site/actionCampaign?auth="+this.parent.user.auth.data).then(function(response){
-                    if(response.data.error){
-                        self.$refs.header.$refs.msg.alertFun(response.data.error);   
-                    }else{
-                    self.$refs.header.$refs.msg.successFun("Successfully deleted campaign!");
-                    self.get();
-                    }
-                }).catch(function(error){
-                    console.log('errors : ', error);
-                });
-            }
-        },
+        }
     },
+},
     template: `
     <div class="inside-content">
     <Header ref="header" />
@@ -185,6 +185,7 @@ togglePublished(item, value) {
   No items
 </div>
 `};  
+
 
 
 
