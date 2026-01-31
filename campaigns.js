@@ -22,8 +22,8 @@ data:function() {
         this.get();
         this.GetFirstAndLastDate();
     },
-    methods:{
-      GetFirstAndLastDate: function() {
+   methods: {
+    GetFirstAndLastDate: function() {
         var year = new Date().getFullYear();
         var month = new Date().getMonth();
         var firstDayOfMonth = new Date(year, month, 2);
@@ -32,7 +32,8 @@ data:function() {
         this.date = firstDayOfMonth.toISOString().substring(0, 10);
         this.date2 = lastDayOfMonth.toISOString().substring(0, 10);
     },
-togglePublished: function(item, value) {
+
+    togglePublished: function(item, value) {
         item.published = value;
 
         axios.post(
@@ -41,12 +42,9 @@ togglePublished: function(item, value) {
         ).catch(() => {
             item.published = !value;
         });
-    },
-         newCampaign() {
-    this.parent.formData = { title: "", published: false };
-    this.$refs.new.active = 1;
-  }
-     get: function() {
+    }, // ← обов’язкова кома
+
+    get: function() {
         this.loader = 1;
 
         axios.post(
@@ -58,54 +56,54 @@ togglePublished: function(item, value) {
                 : [];
 
             this.data.items = items;
-
             this.loader = 0;
         }).catch(() => {
             this.parent.logout();
         });
     },
-     action: function() {
-    if(!this.parent.formData.title) {
-        this.$refs.header.$refs.msg.alertFun("Title is required!");
-        return;
-    }
 
-    const self = this;
-    const data = self.parent.toFormData(self.parent.formData);
+    action: function() {
+        if (!this.parent.formData.title) return; // перевірка title
 
-    axios.post(this.parent.url+"/site/actionCampaign?auth="+this.parent.user.auth.data, data)
-      .then(function(response){
-        self.$refs.new.active = 0;
-        if(self.parent.formData.id){
-            self.$refs.header.$refs.msg.successFun("Successfully updated campaign!");
-        }else{
-            self.$refs.header.$refs.msg.successFun("Successfully added new campaign!");
-        }
-        self.get();
-      }).catch(function(error){
-        console.log('errors : ', error);
-      });
-},
-   del: async function () {
-    if(!this.parent.formData.id) return; // якщо немає id, нічого не видаляємо
+        var self = this;
+        var data = self.parent.toFormData(self.parent.formData);
 
-    if(await this.$refs.header.$refs.msg.confirmFun("Please confirm next action", "Do you want to delete this campaign?")){
-        const self = this;
-        const data = self.parent.toFormData(self.parent.formData);
-
-        axios.post(this.parent.url+"/site/actionCampaign?auth="+this.parent.user.auth.data, data)
+        axios.post(this.parent.url + "/site/actionCampaign?auth=" + this.parent.user.auth.data, data)
         .then(function(response){
-            if(response.data.error){
-                self.$refs.header.$refs.msg.alertFun(response.data.error);   
-            } else {
-                self.$refs.header.$refs.msg.successFun("Successfully deleted campaign!");
-                self.get();
+            self.$refs.new.active = 0;
+            if(self.parent.formData.id){
+                self.$refs.header.$refs.msg.successFun("Successfully updated campaign!");
+            }else{
+                self.$refs.header.$refs.msg.successFun("Successfully added new campaign!");
             }
+            self.get();
         }).catch(function(error){
             console.log('errors : ', error);
         });
+    },
+
+    del: async function() {
+        if (!this.parent.formData.id) return;
+
+        if(await this.$refs.header.$refs.msg.confirmFun("Please confirm next action", "Do you want to delete this campaign?")){
+            var self = this;
+            var data = self.parent.toFormData(self.parent.formData);
+
+            axios.post(this.parent.url + "/site/actionCampaign?auth=" + this.parent.user.auth.data, data)
+            .then(function(response){
+                if(response.data.error){
+                    self.$refs.header.$refs.msg.alertFun(response.data.error);   
+                } else {
+                    self.$refs.header.$refs.msg.successFun("Successfully deleted campaign!");
+                    self.get();
+                }
+            }).catch(function(error){
+                console.log('errors : ', error);
+            });
+        }
     }
 },
+
     template: `
     <div class="inside-content">
     <Header ref="header" />
@@ -195,6 +193,7 @@ togglePublished: function(item, value) {
   No items
 </div>
 `};  
+
 
 
 
