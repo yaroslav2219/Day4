@@ -28,7 +28,7 @@ export const header = {
 
           <!-- LOGO -->
           <div class="w20 logo">
-            <img :src="parent?.url + 'logo.svg'" />
+            <img :src="parent?.url + '/logo.svg'" />
           </div>
 
           <!-- MENU -->
@@ -79,11 +79,11 @@ export const header = {
 
           <!-- USER MENU -->
           <div class="w10 al" id="user-top" v-if="parent?.user?.user">
-            <div id="user-circle" @click="toggleUser">
+            <div id="user-circle" @click="toogleActive">
               {{ parent.user.user[0] }}
             </div>
 
-            <i class="fas fa-caret-down" @click="toggleUser"></i>
+            <i class="fas fa-caret-down" @click="toogleActive"></i>
 
             <div id="user-info" :class="{ active: active }">
               <a href="#" @click.prevent="parent.logout()">
@@ -101,4 +101,5 @@ export const header = {
     `
 
     };
+
 
