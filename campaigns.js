@@ -40,20 +40,23 @@ data:function() {
 
         this.action();
     },
-        get:function() {
-            var self = this;
-            var data = self.parent.toFormData(self.parent.formData);
-            if(this.date!="") data.append('date',this.date);
-            if(this.date2!="") data.append('date2',this.date2);
-            self.loader=1;
-            axios.post(this.parent.url+"/site/getCampaigns?auth="+this.parent.user.auth.data).then(function(response){
-                self.data = response.data;
-                self.loader = 0;
-            }).catch(function(error){
-                self.parent.logout();
-            });
-        },
+      get:function() {
+    var self = this;
+    self.loader = 1;
 
+    axios.post(
+        self.parent.url + "/site/getCampaigns?auth=" + self.parent.user.auth.data
+    ).then(function(response){
+
+        self.data.items = Array.isArray(response.data.items)
+            ? response.data.items
+            : [];
+
+        self.loader = 0;
+    }).catch(function(){
+        self.parent.logout();
+    });
+},
         action:function(){
             var self = this;
             self.parent.formData.copy = "";
@@ -122,71 +125,64 @@ data:function() {
     </div>
     </div>
     
-    <div class="table" v-if="data.items.length">
-    <table>
+ <div class="table" v-if="data.items.length">
+  <table>
     <thead>
-    <tr>
-    <th class="id">#</th>
-    <th class="id"></th>
-    <th>Title</th>
-    <th class="id">Views</th>
-    <th class="id">Clicks</th>
-    <th class="id">Leads</th>
-    <th class="id">Fraud clicks</th>
-    <th class="actions">Actions</th>
-    </tr>
+      <tr>
+        <th class="id">#</th>
+        <th class="id"></th>
+        <th>Title</th>
+        <th class="id">Views</th>
+        <th class="id">Clicks</th>
+        <th class="id">Leads</th>
+        <th class="id">Fraud clicks</th>
+        <th class="actions">Actions</th>
+      </tr>
     </thead>
+
     <tbody>
-    <tr v-for="(item, index) in data.items" :key="item.id">
-    <td class="id">{{item.id}}</td>
-    <td class="id">
-    <toogle
-  :modelValue="item.published"
-  @update:modelValue="togglePublished(item, $event)"
-/>
-    </td>
-    <td><router-link :to="'/campaign/' + item.id">
-  {{ item.title }}
-</router-link>
-</td>
-    <td class="id">
-    <a href="#" @click.prevent="$refs.details.active=1;getDetails(item.id,1)">
-    {{item.views}}
-    </a>
-    </td>
-    <td class="id">
-    <a href="#" @click.prevent="$refs.details.active=1;getDetails(item.id,2)">
-    <template v-if="item.clicks">{{item.clicks}}</template>
-    <template v-if="!item.clicks">0</template>
-    </a>
-    </td>
-    <td class="id">
-     <a href="#" @click.prevent="$refs.details.active=1;getDetails(item.id,3)">
-     <template v-if="item.leads">{{item.leads}}</template>
-     <template v-if="!item.leads">0</template>
-    </a>
-    </td>
-     <td class="id">
-     <a href="#" @click.prevent="$refs.details.active=1;getDetails(item.id,4)">
-     <template v-if="item.fclicks">{{item.fclicks}}</template>
-     <template v-if="!item.fclicks">0</template>
-    </a>
-    </td>
-   <td class="actions">
-    <a href="#" @click.prevent="parent.formData = { ...item }; del()">
-      <i class="fas fa-trash-alt"></i>
-    </a>
-  </td>
-    </tr>
+      <tr
+        v-for="item in data.items"
+        :key="'campaign-' + item.id"
+      >
+        <td class="id">{{ item.id }}</td>
+
+        <td class="id">
+          <toogle
+            :modelValue="item.published"
+            @update:modelValue="togglePublished(item, $event)"
+          />
+        </td>
+
+        <td>
+          <router-link :to="'/campaign/' + item.id">
+            {{ item.title }}
+          </router-link>
+        </td>
+
+        <td class="id">{{ item.views }}</td>
+
+        <td class="id">{{ item.clicks || 0 }}</td>
+
+        <td class="id">{{ item.leads || 0 }}</td>
+
+        <td class="id">{{ item.fclicks || 0 }}</td>
+
+        <td class="actions">
+          <a href="#" @click.prevent="parent.formData = { ...item }; del()">
+            <i class="fas fa-trash-alt"></i>
+          </a>
+        </td>
+      </tr>
     </tbody>
-    </table>
-    </div>
-    <div class="empty" v-if="!data.items.length">
-    No items
-    </div>
-    </div>
-    </div>
+  </table>
+</div>
+
+<div class="empty" v-else>
+  No items
+</div>
 `};  
+
 
 
 
