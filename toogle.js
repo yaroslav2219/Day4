@@ -1,30 +1,35 @@
-export var toogle = {
-    data:function(){
-        return {
-            value:""
-        }
-    },
-    watch: {
-        modelValue:function(o,n){
-            this.value = this.modelValue
-        }
-    },
-    mounted() {
-        this.value = this.modelValue;
-    },
-    methods: {
-        change() {
-            this.$emit('update:modelValue', this.value.toString());
-        }
-    },
+export const toogle = {
     props: {
-        modelValue: String
+        modelValue: {
+            type: Boolean,
+            default: false
+        }
     },
 
-    template:`
+    emits: ['update:modelValue'],
+
+    data() {
+        return {
+            value: this.modelValue
+        }
+    },
+
+    watch: {
+        modelValue(newVal) {
+            this.value = newVal;
+        }
+    },
+
+    methods: {
+        change() {
+            this.$emit('update:modelValue', this.value);
+        }
+    },
+
+    template: `
     <label class="switch">
-    <input type="checkbox" v-model="value" @change="change()">
-    <span class="slider round"></span>
+        <input type="checkbox" v-model="value" @change="change">
+        <span class="slider round"></span>
     </label>
     `
 };
