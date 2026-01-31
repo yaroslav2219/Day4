@@ -12,12 +12,13 @@ data:function() {
     }
 },
     mounted:function(){
-        this.parent = this.$parent.$parent;
+        this.parent = this.$root;
 
         if(!this.parent.user){
             this.parent.logout();
+            return;
         }
-        console.log(this.parent.formData.all);
+        console.log(this.parent.formData);
         this.get();
         this.GetFirstAndLastDate();
     },
@@ -113,7 +114,7 @@ data:function() {
     </div>
     </div>
     
-    <div class="table" v-if="data.items!=''">
+    <div class="table" v-if="data.items.length">
     <table>
     <thead>
     <tr>
@@ -169,12 +170,13 @@ data:function() {
     </tbody>
     </table>
     </div>
-    <div class="empty" v-if="data.items==''">
+    <div class="empty" v-if="!data.items.length">
     No items
     </div>
     </div>
     </div>
 `};  
+
 
 
 
