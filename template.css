@@ -74,12 +74,6 @@ html, body { margin: 0; height: 100%; }
     display: block;
 }
 
-.wrapper {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
 .panel {
     display: flex;
     align-items: center;
@@ -102,10 +96,141 @@ html, body { margin: 0; height: 100%; }
 }
 
 .header {
-    background: #3a3a3a;
-    color: #fff;
-    padding: 15px 20px;
+  background: #0f172a;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
+
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 20px;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.w20 { width: 20%; }
+.w70 { width: 70%; }
+.w10 { width: 10%; }
+
+.al {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 40px;
+}
+
+#menu {
+  position: relative;
+}
+
+#menu i.fa-bars {
+  font-size: 22px;
+  cursor: pointer;
+  display: none;
+}
+
+#menu ul {
+  list-style: none;
+  display: flex;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+}
+
+#menu ul li {
+  white-space: nowrap;
+}
+
+#menu ul li a {
+  color: #cbd5f5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#menu ul li a.router-link-active {
+  color: #38bdf8;
+}
+
+#menu ul.active {
+  display: block;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: #020617;
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+#menu ul.active li {
+  margin-bottom: 10px;
+}
+
+#menu .fa-times {
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+#user-top {
+  position: relative;
+  cursor: pointer;
+}
+
+#user-circle {
+  width: 36px;
+  height: 36px;
+  background: #38bdf8;
+  color: #020617;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+#user-top i {
+  margin-left: 6px;
+}
+
+#user-info {
+  position: absolute;
+  right: 0;
+  top: 45px;
+  background: #020617;
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: none;
+}
+
+#user-info.active {
+  display: block;
+}
+
+#user-info a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  #menu i.fa-bars {
+    display: block;
+  }
+
+  #menu ul {
+    display: none;
+    flex-direction: column;
+  }
+}
+
 .header h1 { font-size: 18px; margin: 0; }
 .logo img { max-height: 35px; }
 
@@ -374,6 +499,7 @@ input:checked + .slider:before {
         max-width: 90%;
     }
 }
+
 
 
 
