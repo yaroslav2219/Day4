@@ -28,7 +28,7 @@ export const header = {
 
           <!-- LOGO -->
           <div class="w20 logo">
-            <img :src="parent?.url + '/logo.svg'" />
+            <img :src="parent?.url + '/favicon.ico'" />
           </div>
 
           <!-- MENU -->
@@ -101,5 +101,6 @@ export const header = {
     `
 
     };
+
 
 
